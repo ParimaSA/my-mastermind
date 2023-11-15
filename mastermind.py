@@ -45,29 +45,57 @@ class Mastermind:
             new_answer += str(n)
         self.answer = new_answer
 
+    def display_hint(self, color, position):
+        print('*' * position, 'o' * (color - position), sep='')
+
+    def get_hint(self, guess):
+        correct_color = 0
+        correct_position = 0
+        set_guess = set(list(guess))
+        for i in set_guess:
+            n = min(self.answer.count(i), guess.count(i))
+            correct_color += n
+        for i in range(len(guess)):
+            if guess[i] == self.answer[i]:
+                correct_position += 1
+        self.display_hint(correct_color, correct_position)
+
+    def check_guess(self, guess):
+        guess = list(set(list(guess)))
+        check = 0
+        for character in guess:
+            if int(character) not in range(1,self.num_color+1):
+                check = -1
+        if check == -1:
+            print('WARNING!!: There are colors out of range.')
+
+    def determine_end(self, guess):
+        return self.answer == guess
+
     def play_game(self):
         print()
+        print('Input q if you want to exit.')
         print(f'Playing Mastermind with {self.num_color} colors and {self.num_position} positions')
         self.set_up_answer()
         round = 0
+        name = input('Enter your name: ')
         while True:
-            position = 0
-            color = 0
-            password = input('What is your guess?: ')
-            print('Your guess is', password)
-            set_pass = list(set(list(password)))
-            for i in set_pass:
-                n = min(self.answer.count(i), password.count(i))
-                color += n
-            for i in range(len(password)):
-                if password[i] == self.answer[i]:
-                    position += 1
-            print('*' * position, 'o' * (color - position), sep='')
+            guess = input('What is your guess?: ')
+            print('Your guess is', guess)
+            if guess == 'q':
+                self.menu()
+            if len(guess) != self.num_position:
+                print('WARNING!!: Incorrect position\n')
+                continue
+            self.get_hint(guess)
+            self.check_guess(guess)
             print()
             round += 1
-            if self.answer == password:
+            if self.determine_end(guess):
                 break
-        print(f'You solve it after {round} rounds')
+        print('Yeahh!! You WIN.')
+        print(f'{name} solve it after {round} rounds')
+        self.history.append({'name':name, 'score':round})
 
         again = input('Do you want to play again (y/n)?: ')
         while again not in ['y', 'n']:
@@ -99,6 +127,7 @@ class Mastermind:
             self.display_history()
         else:
             sys.exit()
+
 
 my_game = Mastermind()
 my_game.menu()
