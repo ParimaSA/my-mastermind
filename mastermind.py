@@ -43,6 +43,7 @@ class Mastermind:
         for i in range(self.num_position):
             n = random.randint(1,self.num_color)
             new_answer += str(n)
+        print(new_answer)
         self.answer = new_answer
 
     def display_hint(self, color, position):
@@ -72,13 +73,14 @@ class Mastermind:
     def determine_end(self, guess):
         return self.answer == guess
 
-    def play_game(self):
+    def play_game(self, name = ''):
         print()
         print('Input q if you want to exit.')
         print(f'Playing Mastermind with {self.num_color} colors and {self.num_position} positions')
         self.set_up_answer()
         round = 0
-        name = input('Enter your name: ')
+        if name == '':
+            name = input('Enter your name: ')
         while True:
             guess = input('What is your guess?: ')
             print('Your guess is', guess)
@@ -101,12 +103,26 @@ class Mastermind:
         while again not in ['y', 'n']:
             again = input('Do you want to play again (y/n)?: ')
         if again == 'y':
-            self.play_game()
+            self.play_game(name)
         else:
             self.menu()
 
     def display_history(self):
-        pass
+        print()
+        print('History')
+        if len(self.history) == 0:
+            print('There is no history')
+            self.menu()
+        rank1 = ''
+        min_score = 1000000000000000000000000
+        for person in self.history:
+            print(f'Player {person["name"]} \tfinished in {person["score"]} round')
+            if person['score'] < min_score:
+                rank1 = person['name']
+                min_score = person['score']
+        print()
+        print(f'Rank#1st Player {rank1} finished in {min_score} round')
+        self.menu()
 
     def menu(self):
         print()
@@ -131,7 +147,6 @@ class Mastermind:
 
 my_game = Mastermind()
 my_game.menu()
-# print(list('123456789'))
 
 
 
