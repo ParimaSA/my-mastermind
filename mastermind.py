@@ -4,10 +4,10 @@ import sys
 
 
 class Mastermind:
-    def __init__(self, num_color=4, num_position=6):
+    def __init__(self, num_color=6, num_position=4):
         self.num_color = num_color
         self.num_position = num_position
-        self.set_up_answer()
+        self.__set_up_answer()
         self.history = []
 
     def set_up_game(self):
@@ -38,18 +38,17 @@ class Mastermind:
         else:
             self.menu()
 
-    def set_up_answer(self):
+    def __set_up_answer(self):
         new_answer = ''
         for i in range(self.num_position):
             n = random.randint(1,self.num_color)
             new_answer += str(n)
-        print(new_answer)
         self.answer = new_answer
 
-    def display_hint(self, color, position):
+    def __display_hint(self, color, position):
         print('*' * position, 'o' * (color - position), sep='')
 
-    def get_hint(self, guess):
+    def __get_hint(self, guess):
         correct_color = 0
         correct_position = 0
         set_guess = set(list(guess))
@@ -59,9 +58,9 @@ class Mastermind:
         for i in range(len(guess)):
             if guess[i] == self.answer[i]:
                 correct_position += 1
-        self.display_hint(correct_color, correct_position)
+        self.__display_hint(correct_color, correct_position)
 
-    def check_guess(self, guess):
+    def __check_guess(self, guess):
         guess = list(set(list(guess)))
         check = 0
         for character in guess:
@@ -76,8 +75,8 @@ class Mastermind:
     def play_game(self, name = ''):
         print()
         print('Input q if you want to exit.')
-        print(f'Playing Mastermind with {self.num_color} colors and {self.num_position} positions')
-        self.set_up_answer()
+        print(f'Playing Mastermind with {self.num_color} colors(1-{self.num_color}) and {self.num_position} positions')
+        self.__set_up_answer()
         round = 0
         if name == '':
             name = input('Enter your name: ')
@@ -89,8 +88,8 @@ class Mastermind:
             if len(guess) != self.num_position:
                 print('WARNING!!: Incorrect position\n')
                 continue
-            self.get_hint(guess)
-            self.check_guess(guess)
+            self.__get_hint(guess)
+            self.__check_guess(guess)
             print()
             round += 1
             if self.determine_end(guess):
@@ -124,14 +123,25 @@ class Mastermind:
         print(f'Rank#1st Player {rank1} finished in {min_score} round')
         self.menu()
 
+    def display_rule(self):
+        print()
+        print('How to play Mastermind?')
+        print('The objective of the game is to guess the exact positions of the numbers in the sequence.')
+        print('Hint:')
+        print('    A star * indicates that there is a color that is positioned correctly.')
+        print('    A letter o indicates that there is a color that is positioned incorrectly.')
+        print('The game is played on until a player successfully solves the puzzle')
+        self.menu()
+
     def menu(self):
         print()
         print('Mastermind Game')
         print('1.Play Game')
         print('2.Set up Game')
         print('3.Show History')
-        print('4.Exit Game')
-        ans_list = ['1', '2', '3', '4']
+        print('4.Rules')
+        print('0.Exit Game')
+        ans_list = ['1', '2', '3', '4', '0']
         ans = input('Your Choice: ')
         while ans not in ans_list:
             ans = input('Your Choice: ')
@@ -141,6 +151,8 @@ class Mastermind:
             self.set_up_game()
         elif ans == '3':
             self.display_history()
+        elif ans == '4':
+            self.display_rule()
         else:
             sys.exit()
 
