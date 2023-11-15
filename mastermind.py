@@ -8,9 +8,35 @@ class Mastermind:
         self.num_color = num_color
         self.num_position = num_position
         self.set_up_answer()
+        self.history = []
 
     def set_up_game(self):
-        pass
+        print()
+        print(f'Now there are {self.num_color} colors and {self.num_position} position')
+        check = input('You want to change colors or position (c/p)?: ')
+        while check not in ['c', 'p']:
+            check = input('You want to change colors or position (c/p)?: ')
+
+        if check == 'c':
+            n = input('Change colors to(1-8): ')
+            while n not in list('12345678'):
+                n = input('Change colors to(1-8): ')
+            self.num_color = int(n)
+        else:
+            n = input('Change positions to(1-10): ')
+            while n not in list('123456789') + ['10']:
+                n = input('Change positions to(1-10): ')
+            self.num_position = int(n)
+
+        print(f'Now there are {self.num_color} colors and {self.num_position} position')
+
+        again = input('Do you want to change more (y/n)?: ')
+        while again not in ['y', 'n']:
+            again = input('Do you want to change more (y/n)?: ')
+        if again == 'y':
+            self.set_up_game()
+        else:
+            self.menu()
 
     def set_up_answer(self):
         new_answer = ''
@@ -20,6 +46,7 @@ class Mastermind:
         self.answer = new_answer
 
     def play_game(self):
+        print()
         print(f'Playing Mastermind with {self.num_color} colors and {self.num_position} positions')
         self.set_up_answer()
         round = 0
@@ -50,7 +77,7 @@ class Mastermind:
         else:
             self.menu()
 
-    def history(self):
+    def display_history(self):
         pass
 
     def menu(self):
@@ -69,12 +96,13 @@ class Mastermind:
         elif ans == '2':
             self.set_up_game()
         elif ans == '3':
-            self.history()
+            self.display_history()
         else:
             sys.exit()
 
 my_game = Mastermind()
 my_game.menu()
+# print(list('123456789'))
 
 
 
